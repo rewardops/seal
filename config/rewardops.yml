@@ -16,7 +16,10 @@ backend:
 
   include_repos: 
     - "pangea" 
-
+    
+  exclude_labels:
+    - hold
+    
   quotes:
     - I'm pretty sure there's a lot more to life than being really, really, ridiculously good looking. And I plan on finding out what that is.
     - Where shall we go for lunch?
@@ -41,6 +44,9 @@ frontend:
     - rewardops-express-admin
     - rewardops-sdk-node
 
+  exclude_labels:
+    - hold
+    
   exclude_titles:
     - "[DO NOT MERGE]"
     - DO NOT MERGE
