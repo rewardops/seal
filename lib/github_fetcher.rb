@@ -7,14 +7,15 @@ class GithubFetcher
 
   attr_accessor :people
 
-  def initialize(team_members_accounts, use_labels, exclude_labels, exclude_titles, include_repos)
+  def initialize(team_members_accounts, use_labels, on_hold_labels, exclude_titles, include_repos)
     @github = Octokit::Client.new(:access_token => ENV['GITHUB_TOKEN'])
     @github.user.login
     @github.auto_paginate = true
     @people = team_members_accounts
     @use_labels = use_labels
-    @exclude_labels = exclude_labels.map(&:downcase).uniq if exclude_labels
+    @on_hold_labels = on_hold_labels.map(&:downcase).uniq if on_hold_labels 
     @exclude_titles = exclude_titles.map(&:downcase).uniq if exclude_titles
+    @prs_on_hold = []
     @labels = {}
     @include_repos = include_repos 
   end
@@ -43,6 +44,7 @@ class GithubFetcher
     pr['approved'] = approved?(pull_request, repo_name)
     pr['updated'] = Date.parse(pull_request.updated_at.to_s)
     pr['labels'] = labels(pull_request, repo_name)
+    pr['on_hold'] = on_hold?(pull_request, repo_name)
     pr['requested_reviewers'] = get_requested_reviewers(pull_request, repo_name)
     pr
   end
@@ -85,15 +87,14 @@ class GithubFetcher
 
   def hidden?(pull_request, repo)
     !included_repo?(repo) ||
-      excluded_label?(pull_request, repo) ||
       excluded_title?(pull_request.title) ||
       !person_subscribed?(pull_request)
   end
 
-  def excluded_label?(pull_request, repo)
-    return false unless exclude_labels
+  def on_hold?(pull_request, repo)
+    return false unless @on_hold_labels 
     lowercase_label_names = labels(pull_request, repo).map { |l| l['name'].downcase }
-    exclude_labels.any? { |e| lowercase_label_names.include?(e) }
+    @on_hold_labels.any? { |e| lowercase_label_names.include?(e) }
   end
 
   def excluded_title?(title)

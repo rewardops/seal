@@ -17,7 +17,7 @@ backend:
   include_repos: 
     - "pangea" 
     
-  exclude_labels:
+  on_hold_labels:
     - hold
     
   use_labels: true
@@ -46,7 +46,7 @@ frontend:
     - rewardops-express-admin
     - rewardops-sdk-node
 
-  exclude_labels:
+  on_hold_labels:
     - hold
 
   use_labels: true

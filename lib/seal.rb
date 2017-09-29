@@ -57,18 +57,18 @@ class Seal
     if config
       members = config['members']
       use_labels = config['use_labels']
-      exclude_labels = config['exclude_labels']
+      on_hold_labels = config['on_hold_labels']
       exclude_titles = config['exclude_titles']
       include_repos = config['include_repos']
       @quotes = config['quotes']
     else
       members = ENV['GITHUB_MEMBERS'] ? ENV['GITHUB_MEMBERS'].split(',') : []
       use_labels = ENV['GITHUB_USE_LABELS'] ? ENV['GITHUB_USE_LABELS'].split(',') : nil
-      exclude_labels = ENV['GITHUB_EXCLUDE_LABELS'] ? ENV['GITHUB_EXCLUDE_LABELS'].split(',') : nil
+      on_hold_labels = ENV['GITHUB_ON_HOLD_LABELS'] ? ENV['GITHUB_ON_HOLD_LABELS'].split(',') : nil
       exclude_titles = ENV['GITHUB_EXCLUDE_TITLES'] ? ENV['GITHUB_EXCLUDE_TITLES'].split(',') : nil
       @quotes = ENV['SEAL_QUOTES'] ? ENV['SEAL_QUOTES'].split(',') : nil
     end
-    return fetch_from_github(members, use_labels, exclude_labels, exclude_titles, include_repos) if @mode == nil
+    return fetch_from_github(members, use_labels, on_hold_labels, exclude_titles, include_repos) if @mode == nil
     @quotes
   end
 

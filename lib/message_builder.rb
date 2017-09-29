@@ -1,10 +1,20 @@
+require "pry"
+
 class MessageBuilder
 
   attr_accessor :pull_requests, :report, :mood, :poster_mood
 
-  def initialize(content, mode=nil)
-    @content = content
-    @mode = mode
+  def initialize(pull_requests, mode=nil)
+    @pull_requests = pull_requests.map{ |_title, pull_request| pull_request } 
+
+    @old_pull_requests = @pull_requests.select { |pull_request| is_old?(pull_request) }
+    @stale_holds = @pull_requests.select { |pull_request| on_hold?(pull_request) }
+    @recent_pull_requests = @pull_requests.select { |pull_request| is_recent?(pull_request) } 
+
+    # Defaults
+    @poster_mood = "approval"
+    @message = ""
+
     org_config
   end
 
@@ -17,24 +27,85 @@ class MessageBuilder
   end
 
   def build
-    if @mode == "quotes"
-      bark_about_quotes
-    else
-      github_seal
+    add_message_header
+
+    add_old_pull_requests
+    add_stale_holds
+    add_recent_pull_requests
+
+    add_message_footer
+
+    return @message
+  end
+
+  def add_message_header
+    if @pull_requests.empty?
+      @message += "*Aloha team! It's a beautiful day! :happyseal: :happyseal: :happyseal:\n\nNo pull requests to review today! :rainbow: :sunny: :metal: :tada:*"
+    else 
+      @message += header_and_mood_for_existing_prs
     end
   end
 
-  def github_seal
-    if !old_pull_requests.empty?
+  def add_message_footer
+    ["Remember each time you forget to review your pull requests, a baby seal dies.",
+    "Merry Reviewing!"]
+  end
+
+  def header_and_mood_for_existing_prs 
+    if !@old_pull_requests.empty? 
       @poster_mood = "angry"
-      bark_about_old_pull_requests
-    elsif @content.empty?
-      @poster_mood = "approval"
-      no_pull_requests
+      "*AAAAAAARGH! #{pluralize('this', @old_pull_requests.length)} #{pluralize('pull request has', @old_pull_requests.length)} not been updated in over 2 days.*\n\n\n"
+    elsif !@stale_holds.empty?
+      @poster_mood = "upset"
+      "*These PRs are staler than that box of triscuits from when you were going through that healthy eating phase.*\n\n\n"
     else
       @poster_mood = "informative"
-      list_pull_requests
+      "*Hello team! \n\n Here are the pull requests that need to be reviewed today:*\n\n\n"
     end
+  end
+
+  def add_old_pull_requests
+    @old_pull_requests.each_with_index do |pull_request, index|
+      @message += present(pull_request, index)
+    end
+  end
+
+  def add_recent_pull_requests
+    if !@recent_pull_requests.empty? && @poster_mood != "informative"
+      @message += "\n\n*There are also these pull requests that need to be reviewed today:*\n\n"
+    end
+
+    @recent_pull_requests.each_with_index do |pull_request, index|
+      @message += present(pull_request, index)
+    end
+  end
+
+  def add_stale_holds
+    if !@stale_holds.empty? && @poster_mood != "upset"
+      @message += "\n\n*There are also these pull requests that have been on hold for quite some time:*\n\n"
+    end
+
+    @stale_holds.each_with_index do |pull_request, index|
+      @message += present(pull_request, index)
+    end
+  end
+
+  def on_hold?(pull_request)
+    if pull_request['on_hold']   
+      return rotten?(pull_request)
+    end
+    return false
+  end
+
+  def is_old?(pull_request)
+    if !pull_request['on_hold']   
+      return rotten?(pull_request)
+    end
+    return false
+  end
+
+  def is_recent?(pull_request)
+    !on_hold?(pull_request) && !is_old?(pull_request)
   end
 
   def rotten?(pull_request)
@@ -52,63 +123,37 @@ class MessageBuilder
 
   private
 
-  def old_pull_requests
-    @old_pull_requests ||= @content.select { |_title, pr| rotten?(pr) }
+  def pluralize(key, count)
+    plural_array_index = (count.to_i == 1 ? 0 : 1)
+
+    values_to_pluralize = {
+      "this" => ["this", "these"],
+      "pull request has" => ["pull request has", "pull request have"],
+      "comment" => ["comment", "comments"]
+    }
+
+    values_to_pluralize[key][plural_array_index]
   end
 
-  def bark_about_old_pull_requests
-    angry_bark = old_pull_requests.keys.each_with_index.map { |title, n| present(title, n + 1) }
-    recent_pull_requests = @content.reject { |_title, pr| rotten?(pr) }
-    list_recent_pull_requests = recent_pull_requests.keys.each_with_index.map { |title, n| present(title, n + 1) }
-    informative_bark = "There are also these pull requests that need to be reviewed today:\n\n#{list_recent_pull_requests.join} " if !recent_pull_requests.empty?
-    "AAAAAAARGH! #{these(old_pull_requests.length)} #{pr_plural(old_pull_requests.length)} not been updated in over 2 days.\n\n#{angry_bark.join}\nRemember each time you forget to review your pull requests, a baby seal dies.
-    \n\n#{informative_bark}"
-  end
-
-  def list_pull_requests
-    message = @content.keys.each_with_index.map { |title, n| present(title, n + 1) }
-    "Hello team! \n\n Here are the pull requests that need to be reviewed today:\n\n#{message.join}\nMerry reviewing!"
-  end
-
-  def no_pull_requests
-    "Aloha team! It's a beautiful day! :happyseal: :happyseal: :happyseal:\n\nNo pull requests to review today! :rainbow: :sunny: :metal: :tada:"
-  end
-
-  def bark_about_quotes
-    @content.sample
-  end
-
-  def comments(pull_request)
-    return " comment" if @content[pull_request]["comments_count"] == "1"
-    " comments"
-  end
-
-  def these(items)
-    if items == 1
-      'This'
-    else
-      'These'
-    end
-  end
-
-  def pr_plural(prs)
-    if prs == 1
-      'pull request has'
-    else
-      'pull requests have'
-    end
-  end
-
+  # TODO: This is uber ugly, perhaps we could add some kind of templating engine
+  
   def present(pull_request, index)
-    pr = @content[pull_request]
+    index += 1
+    pr = pull_request
     days = age_in_days(pr)
     thumbs_up = ''
     thumbs_up = " | #{pr["thumbs_up"].to_i} :+1:" if pr["thumbs_up"].to_i > 0
-    changes_requested = pr["requested_reviewers"].empty? ? " :change: " : " :mag: " 
+    if pr["on_hold"]
+      on_hold = " :no_entry: "
+      changes_requested = ""
+    else
+      on_hold = ""
+      changes_requested = pr["requested_reviewers"].empty? ? " :change: " : " :mag: " 
+    end
     approved = pr["approved"] ? " | :white_check_mark: " : ""
     <<-EOF.gsub(/^\s+/, '')
-    #{index}\) *#{pr["repo"]}* | #{changes_requested}#{format_author(pr)} | updated #{days_plural(days)}#{thumbs_up}#{approved}
-    #{labels(pr)} <#{pr["link"]}|#{pr["title"]}> - #{pr["comments_count"]}#{comments(pull_request)}
+    >#{index}\) _#{pr["repo"]}_ | #{changes_requested}#{on_hold}#{format_author(pr)} | updated #{days_plural(days)}#{thumbs_up}#{approved}
+    >#{labels(pr)} <#{pr["link"]}|#{pr["title"]}> - #{pr["comments_count"]} #{pluralize("comment", pr["comments_count"])}
     EOF
   end
 
@@ -148,8 +193,6 @@ class MessageBuilder
   end
 
   def labels(pull_request)
-    pull_request['labels']
-      .map { |label| "[#{label['name']}]" }
-      .join(' ')
+    pull_request['labels'].map{ |label| "[#{label['name']}]" }.join(' ')
   end
 end

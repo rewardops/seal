@@ -1,6 +1,6 @@
 #!/bin/bash
 teams=(
-  frontend 
+  frontend
 )
 
 for team in ${teams[*]}; do
