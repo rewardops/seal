@@ -19,6 +19,11 @@ backend:
     
   on_hold_labels:
     - hold
+
+  exclude_titles:
+    - "[DO NOT MERGE]"
+    - DO NOT MERGE
+    - WIP
     
   use_labels: true
 
