@@ -50,6 +50,7 @@ frontend:
     - rewardops-angular-catalog-airmiles
     - rewardops-express-admin
     - rewardops-sdk-node
+    - rewardops-angular-catalog-aimia
 
   on_hold_labels:
     - hold
