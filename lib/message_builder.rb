@@ -60,7 +60,7 @@ class MessageBuilder
       "*These PRs are staler than that box of triscuits from when you were going through that healthy eating phase.*\n\n\n"
     else
       @poster_mood = "informative"
-      "*Hello team! \n\n Here are the pull requests that need to be reviewed today:*\n\n\n"
+      "*Hello team!* \n\n *Here are the pull requests that need to be reviewed today:*\n\n\n"
     end
   end
 
