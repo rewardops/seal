@@ -8,7 +8,7 @@ class MessageBuilder
     @pull_requests = pull_requests.map{ |_title, pull_request| pull_request } 
 
     @old_pull_requests = @pull_requests.select { |pull_request| is_old?(pull_request) }
-    @stale_holds = @pull_requests.select { |pull_request| on_hold?(pull_request) }
+    @stale_holds = @pull_requests.select { |pull_request| stale_hold?(pull_request) }
     @recent_pull_requests = @pull_requests.select { |pull_request| is_recent?(pull_request) } 
 
     # Defaults
@@ -91,14 +91,18 @@ class MessageBuilder
   end
 
   def on_hold?(pull_request)
-    if pull_request['on_hold']   
+    return pull_request['on_hold']   
+  end
+
+  def stale_hold?(pull_request)
+    if on_hold?(pull_request)   
       return rotten?(pull_request)
     end
     return false
   end
 
   def is_old?(pull_request)
-    if !pull_request['on_hold']   
+    if !on_hold?(pull_request)   
       return rotten?(pull_request)
     end
     return false
