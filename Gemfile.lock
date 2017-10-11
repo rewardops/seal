@@ -27,6 +27,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    holidays (6.2.0)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     jsonlint (0.2.0)
@@ -101,6 +102,7 @@ DEPENDENCIES
   dotenv
   guard
   guard-rspec
+  holidays
   jsonlint
   octokit (~> 4.0)
   pry-byebug

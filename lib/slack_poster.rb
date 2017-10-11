@@ -9,13 +9,21 @@ class SlackPoster
     @team_channel = team_channel
     @mood = mood
     @today = Date.today
-    @postable_day = !today.saturday? && !today.sunday?
+    @postable_day = postable_day?
     mood_hash
     create_poster
   end
 
   def create_poster
     @poster = Slack::Poster.new("#{webhook_url}", slack_options)
+  end
+
+  def postable_day?
+    !today.saturday? && !today.sunday? && is_not_holiday?
+  end
+
+  def is_not_holiday?
+    !Holidays.on(today, :ca_on, :observed).first
   end
 
   def send_request(message)

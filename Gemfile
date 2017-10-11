@@ -7,6 +7,8 @@ gem "octokit", "~> 4.0"
 gem "sinatra"
 gem "thin"
 gem 'pry-byebug'
+gem 'holidays'
+gem 'timecop'
 
 group :test do
   gem 'guard'

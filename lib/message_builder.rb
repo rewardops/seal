@@ -1,5 +1,3 @@
-require "pry"
-
 class MessageBuilder
 
   attr_accessor :pull_requests, :report, :mood, :poster_mood
@@ -116,16 +114,22 @@ class MessageBuilder
     today = Date.today
     actual_age = (today - pull_request['updated']).to_i
     if today.monday?
-      weekdays_age = actual_age - 2
+      weekdays_age = actual_age - 2 # If Monday is a holiday, nothing will even be posted to slack. See SlackPoster
     elsif today.tuesday?
-      weekdays_age = actual_age - 1
+      weekdays_age = actual_age - (1 + holidays_count(today))
     else
-      weekdays_age = actual_age
+      weekdays_age = actual_age - (holidays_count(today))
     end
     weekdays_age > 2
   end
 
   private
+
+  def holidays_count today
+    end_date = today
+    start_date = today - (today.wday - 1)
+    Holidays.between(start_date, end_date, :observed, :ca_on).count
+  end
 
   def pluralize(key, count)
     plural_array_index = (count.to_i == 1 ? 0 : 1)
@@ -186,11 +190,12 @@ class MessageBuilder
   end
 
   def days_plural(days)
-    case days
-    when 0
+    if days == 0
       'today'
-    when 1
+    elsif days == 1
       "yesterday"
+    elsif days < 0
+      "recently"
     else
       "#{days} days ago"
     end

@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+require 'holidays'
+require 'timecop'
 
 require './lib/github_fetcher.rb'
 require './lib/message_builder.rb'
 require './lib/slack_poster.rb'
+
 
 # Entry point for the Seal!
 class Seal
