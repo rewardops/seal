@@ -22,8 +22,13 @@ backend:
 
   exclude_titles:
     - "[DO NOT MERGE]"
-    - DO NOT MERGE
-    - WIP
+    - "[SHUT UP SEAL]"
+    - "[HOLD]"
+    - "[WIP]"
+    - "DO NOT MERGE"
+    - "SHUT UP SEAL"
+    - "HOLD"
+    - "WIP"
     
   use_labels: true
 
@@ -59,8 +64,13 @@ frontend:
 
   exclude_titles:
     - "[DO NOT MERGE]"
-    - DO NOT MERGE
-    - WIP
+    - "[SHUT UP SEAL]"
+    - "[HOLD]"
+    - "[WIP]"
+    - "DO NOT MERGE"
+    - "SHUT UP SEAL"
+    - "HOLD"
+    - "WIP"
 
   quotes:
     - I'm pretty sure there's a lot more to life than being really, really, ridiculously good looking. And I plan on finding out what that is.
