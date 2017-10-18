@@ -148,7 +148,6 @@ class MessageBuilder
   def present(pull_request, index)
     index += 1
     pr = pull_request
-    days = age_in_days(pr)
     thumbs_up = ''
     thumbs_up = " | #{pr["thumbs_up"].to_i} :+1:" if pr["thumbs_up"].to_i > 0
     if pr["on_hold"]
@@ -158,10 +157,9 @@ class MessageBuilder
       on_hold = ""
       changes_requested = pr["requested_reviewers"].empty? ? " :change: " : " :mag: " 
     end
-    approved = pr["approved"] ? " | :white_check_mark: " : ""
     <<-EOF.gsub(/^\s+/, '')
-    >#{index}\) _#{pr["repo"]}_ | #{changes_requested}#{on_hold}#{format_author(pr)} | updated #{days_plural(days)}#{thumbs_up}#{approved}
-    >#{labels(pr)} <#{pr["link"]}|#{pr["title"]}> - #{pr["comments_count"]} #{pluralize("comment", pr["comments_count"])}
+    >#{index}\) _#{pr["repo"]}_ | #{changes_requested}#{on_hold}#{format_author(pr)}
+    >#{labels(pr)} <#{pr["link"]}|#{pr["title"]}>
     EOF
   end
 
