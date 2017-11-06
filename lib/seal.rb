@@ -6,6 +6,7 @@ require 'timecop'
 
 require './lib/github_fetcher.rb'
 require './lib/message_builder.rb'
+require './lib/merge_message_builder.rb'
 require './lib/slack_poster.rb'
 
 
@@ -37,11 +38,18 @@ class Seal
 
   def bark_at(team)
     if ENV["#{team.upcase}_SLACK_WEBHOOK"]
-      message_builder = MessageBuilder.new(team_params(team), @mode)
-      message = message_builder.build
       channel = ENV["SLACK_CHANNEL"] ? ENV["SLACK_CHANNEL"] : team_config(team)['channel']
-      slack = SlackPoster.new(ENV["#{team.upcase}_SLACK_WEBHOOK"], channel, message_builder.poster_mood)
-      slack.send_request(message)
+
+      general_message_builder = MessageBuilder.new(team_params(team), @mode)
+      general_message = general_message_builder.build
+      merge_message_builder = MergeMessageBuilder.new(team_params(team), @mode)
+      merge_message = merge_message_builder.build
+
+      slack_poster = SlackPoster.new(ENV["#{team.upcase}_SLACK_WEBHOOK"], channel, general_message_builder.poster_mood)
+      slack_poster.send_request(general_message)
+
+      slack_poster = SlackPoster.new(ENV["#{team.upcase}_SLACK_WEBHOOK"], channel, merge_message_builder.poster_mood)
+      slack_poster.send_request(merge_message, merge_message_builder.image_attachment)
     else
       return false
     end

@@ -26,12 +26,16 @@ class SlackPoster
     !Holidays.on(today, :ca_on, :observed).first
   end
 
-  def send_request(message)
+  def send_request(message, image = nil)
     if ENV['DRY']
       puts "Will#{' not' unless postable_day} post #{mood} message to #{channel} on #{today.strftime('%A')}"
       puts slack_options.inspect
       puts message
     else
+      if image 
+        message = add_image(message, image)
+      end
+
       poster.send_message(message) if postable_day
     end
   end
@@ -39,6 +43,13 @@ class SlackPoster
   private
 
   attr_reader :postable_day, :today
+
+  def add_image message, image_url
+    attachment = Slack::Attachment.new
+    attachment.fallback = "Upgrade, yo."
+    attachment.image_url = image_url 
+    Slack::Message.new(message, attachment)
+  end
 
   def slack_options
     {
@@ -75,6 +86,9 @@ class SlackPoster
     elsif @mood == "charter"
       @mood_hash[:icon_emoji]= ":happyseal:"
       @mood_hash[:username]= "Team Charter Seal"
+    elsif @mood == "merge"
+      @mood_hash[:icon_emoji] = ":mergeseal:"
+      @mood_hash[:username] = "Sealgent Merge"
     else
       fail "Bad mood: #{mood}."
     end

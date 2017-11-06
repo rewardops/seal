@@ -38,7 +38,7 @@ class MessageBuilder
 
   def add_message_header
     if @pull_requests.empty?
-      @message += "*Aloha team! It's a beautiful day! :happyseal: :happyseal: :happyseal:\n\nNo pull requests to review today! :rainbow: :sunny: :metal: :tada:*"
+      @message += "*Aloha team! It's a beautiful day! :happyseal: :happyseal: :happyseal:*\n\n*No pull requests to review today! :rainbow: :sunny: :metal: :tada:*"
     else 
       @message += header_and_mood_for_existing_prs
     end
