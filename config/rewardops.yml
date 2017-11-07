@@ -12,7 +12,7 @@ backend:
     - muokata
     - myeung58
 
-  channel: '#catalog-app'
+  channel: '#development'
 
   include_repos: 
     - "pangea" 
@@ -45,7 +45,7 @@ frontend:
     - myeung58
     - noahkoch 
 
-  channel: "#development"
+  channel: "#catalog-app"
 
   include_repos:
     - rewardops-ng     
