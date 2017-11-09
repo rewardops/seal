@@ -3,7 +3,8 @@ class MessageBuilder
   attr_accessor :pull_requests, :report, :mood, :poster_mood
 
   def initialize(pull_requests, mode=nil)
-    @pull_requests = pull_requests.map{ |_title, pull_request| pull_request } 
+    @pull_requests = pull_requests.map{ |_title, pull_request| pull_request }
+                                  .select{ |pull_request| !is_approved?(pull_request) }
 
     @old_pull_requests = @pull_requests.select { |pull_request| is_old?(pull_request) }
     @stale_holds = @pull_requests.select { |pull_request| stale_hold?(pull_request) }
@@ -108,6 +109,11 @@ class MessageBuilder
 
   def is_recent?(pull_request)
     !on_hold?(pull_request) && !is_old?(pull_request)
+  end
+
+  # Any PR that is approved but not merged
+  def is_approved?(pull_request)
+    pull_request['approved']
   end
 
   def rotten?(pull_request)
