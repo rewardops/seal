@@ -57,6 +57,7 @@ class MergeMessageBuilder
         https://media.giphy.com/media/1Ri3cZmDNFVtK/giphy.gif
         https://media.giphy.com/media/10sfl8BfZocbFC/giphy.gif
         https://media.tenor.com/images/d3972747d472654b151a8744671d7709/tenor.gif
+        https://media.giphy.com/media/7EMcwG3wN6kta/giphy.gif
       ).sample
     end
   end
