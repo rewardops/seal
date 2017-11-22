@@ -19,6 +19,8 @@ backend:
     
   on_hold_labels:
     - hold
+    - hold-wip
+    - hold-blocked
 
   exclude_titles:
     - "[DO NOT MERGE]"
@@ -59,6 +61,8 @@ frontend:
 
   on_hold_labels:
     - hold
+    - hold-wip
+    - hold-blocked
 
   use_labels: true
 
