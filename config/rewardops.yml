@@ -40,6 +40,7 @@ backend:
     - Where's the data?
 
 frontend:
+  # Slack usernames
   members:
     - Yathi 
     - adriaanlabusc
@@ -58,6 +59,9 @@ frontend:
     - rewardops-express-admin
     - rewardops-sdk-node
     - rewardops-angular-catalog-aimia
+    - rewardops-microsite-cineplex
+    - rewardops-aimia-payment-form
+    - rewardops-angular-catalog-puntos-colombia 
 
   on_hold_labels:
     - hold
@@ -93,3 +97,30 @@ slack_users:
   benevolentmadman: "alex"
   RoLoTo: "rolo"
   muokata: "allan"
+  kikisek: "kristyna"
+
+gifs:
+  -  https://media.giphy.com/media/cFkiFMDg3iFoI/giphy.gif
+  -  https://media.giphy.com/media/xTiTnqEbrWfX7xA9TW/giphy.gif
+  -  https://media.giphy.com/media/Mz6BMFMgkLDpe/giphy.gif
+  -  https://media.giphy.com/media/K6PzlAKOm221G/giphy.gif
+  -  https://media.giphy.com/media/v9w2V9UUQqyDm/giphy.gif
+  -  https://media.giphy.com/media/D0WOL0ogZIoG4/giphy.gif
+  -  https://media.giphy.com/media/mW0zaDZZ9aYzS/giphy.gif
+  -  https://media.giphy.com/media/ZH5UpiZJiRRgQ/giphy.gif
+  -  https://media.giphy.com/media/1Ri3cZmDNFVtK/giphy.gif
+  -  https://media.giphy.com/media/10sfl8BfZocbFC/giphy.gif
+  -  https://media.tenor.com/images/d3972747d472654b151a8744671d7709/tenor.gif
+  -  https://media.giphy.com/media/7EMcwG3wN6kta/giphy.gif
+  -  https://media.giphy.com/media/xUA7aRzC18VKPDgFfG/giphy.gif
+  -  https://media.giphy.com/media/3oEjHQBowIJaxe3fS8/giphy.gif
+  -  https://media.giphy.com/media/l41YoFoF3VMTNTYti/giphy.gif
+  -  https://media.giphy.com/media/3oFzmc9OGspSduwK4g/giphy.gif
+  -  https://media.giphy.com/media/xT0xeQlwC7DoDjUS4w/giphy.gif
+  -  https://media.giphy.com/media/3o752hpmTcQYvUsUmc/giphy.gif
+  -  https://media.giphy.com/media/l4FGt0uR7ClQ21VOE/giphy.gif
+  -  https://media.giphy.com/media/3ohc1fouQAB89eHXK8/giphy.gif
+  -  https://media.giphy.com/media/xTiTncVep2khPGhK1i/giphy.gif
+  -  https://media.giphy.com/media/JzcJI4gSuoFFe/giphy.gif
+  -  https://media.giphy.com/media/4no7ul3pa571e/giphy.gif
+  -  https://media.giphy.com/media/l0IyayMlfXiWKTJCM/giphy.gif

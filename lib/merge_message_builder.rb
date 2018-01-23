@@ -45,23 +45,7 @@ class MergeMessageBuilder
 
   def get_random_merge_image
     if @unmerged_pull_requests.any?
-      %w(
-        https://media.giphy.com/media/cFkiFMDg3iFoI/giphy.gif
-        https://media.giphy.com/media/xTiTnqEbrWfX7xA9TW/giphy.gif
-        https://media.giphy.com/media/Mz6BMFMgkLDpe/giphy.gif
-        https://media.giphy.com/media/K6PzlAKOm221G/giphy.gif
-        https://media.giphy.com/media/v9w2V9UUQqyDm/giphy.gif
-        https://media.giphy.com/media/D0WOL0ogZIoG4/giphy.gif
-        https://media.giphy.com/media/mW0zaDZZ9aYzS/giphy.gif
-        https://media.giphy.com/media/ZH5UpiZJiRRgQ/giphy.gif
-        https://media.giphy.com/media/1Ri3cZmDNFVtK/giphy.gif
-        https://media.giphy.com/media/10sfl8BfZocbFC/giphy.gif
-        https://media.tenor.com/images/d3972747d472654b151a8744671d7709/tenor.gif
-        https://media.giphy.com/media/7EMcwG3wN6kta/giphy.gif
-        https://media.giphy.com/media/xUA7aRzC18VKPDgFfG/giphy.gif
-        https://media.giphy.com/media/3oEjHQBowIJaxe3fS8/giphy.gif
-        https://media.giphy.com/media/l41YoFoF3VMTNTYti/giphy.gif
-      ).sample
+      org_config["gifs"].sample
     end
   end
 
